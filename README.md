@@ -8,6 +8,14 @@
 4. In order to develop quickly, a SimpleLauncher is built-in. If it does not meet the requirements, please extend BaseLauncher.
 5. For more functions, please refer to the demo.
 
+## Dependencies
+
+### Gradle
+
+```kotlin
+implementation("io.github.clistery:stream-arl:1.0.0")
+```
+
 ## USEG
 
 ### BaseLauncher
