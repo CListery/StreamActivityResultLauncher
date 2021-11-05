@@ -128,13 +128,13 @@ abstract class BaseLauncher<I, O>(
         }
     }
 
-    private fun dispatchSuccess(result: O?) {
+    protected fun dispatchSuccess(result: O?) {
         launcherResult.success(result)
         nextLauncher?.launch()
         cleanLauncher()
     }
 
-    private fun dispatchFail(exception: Throwable) {
+    protected fun dispatchFail(exception: Throwable) {
         var next: BaseLauncher<*, *>? = nextLauncher
         if (null == next) {
             launcherResult.fail(exception)
@@ -150,7 +150,7 @@ abstract class BaseLauncher<I, O>(
         cleanLauncher()
     }
 
-    private fun cleanLauncher() {
+    protected fun cleanLauncher() {
         prevLauncher = null
         nextLauncher = null
     }
