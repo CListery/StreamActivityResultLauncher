@@ -1,13 +1,11 @@
-package com.yh.sarl.internal
+package com.yh.sarl
 
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.yh.sarl.IActResultRegistryProvider
 
-@PublishedApi
-internal fun Fragment.actResultRegistryProvider(): IActResultRegistryProvider {
+fun Fragment.actResultRegistryProvider(): IActResultRegistryProvider {
     return object : IActResultRegistryProvider {
         override fun provider(): ActivityResultRegistry {
             return (host as? ActivityResultRegistryOwner)?.activityResultRegistry
@@ -16,8 +14,7 @@ internal fun Fragment.actResultRegistryProvider(): IActResultRegistryProvider {
     }
 }
 
-@PublishedApi
-internal fun FragmentActivity.actResultRegistryProvider(): IActResultRegistryProvider {
+fun FragmentActivity.actResultRegistryProvider(): IActResultRegistryProvider {
     return object : IActResultRegistryProvider {
         override fun provider(): ActivityResultRegistry {
             return activityResultRegistry

@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import com.yh.sarl.IActResultRegistryProvider
-import com.yh.sarl.internal.actResultRegistryProvider
+import com.yh.sarl.actResultRegistryProvider
 
 class SimpleLauncher<I, O>(
     private val activityResultContract: ActivityResultContract<I, O>,

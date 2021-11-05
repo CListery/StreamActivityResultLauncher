@@ -12,7 +12,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.yh.sarl.IActResultRegistryProvider
 import com.yh.sarl.IResultChecker
 import com.yh.sarl.LauncherResult
-import com.yh.sarl.internal.actResultRegistryProvider
+import com.yh.sarl.actResultRegistryProvider
 import com.yh.sarl.throwable.ResultCheckFailException
 
 abstract class BaseLauncher<I, O>(
