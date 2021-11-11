@@ -13,7 +13,7 @@
 ### Gradle
 
 ```kotlin
-implementation("io.github.clistery:stream-arl:1.0.0")
+implementation("io.github.clistery:stream-arl:1.0.4")
 ```
 
 ## USEG

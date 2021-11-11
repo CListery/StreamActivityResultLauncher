@@ -8,6 +8,6 @@ object AppConfig {
     
     const val GROUP_ID = "io.github.clistery"
     const val ARTIFACT_ID = "stream-arl"
-    const val versionName = "1.0.2"
-    const val versionCode = 3
+    const val versionName = "1.0.3"
+    const val versionCode = 4
 }

@@ -1,5 +1,10 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package com.yh.sarl.launcher
 
+import android.os.Build
+import android.os.Looper
+import android.os.MessageQueue
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
@@ -24,6 +29,8 @@ abstract class BaseLauncher<I, O>(
 
     protected lateinit var activityResultLauncher: ActivityResultLauncher<I>
     protected val launcherResult: LauncherResult<O> = LauncherResult.waiting()
+
+    protected var isCreated = false
 
     @Suppress("unused")
     companion object {
@@ -73,6 +80,7 @@ abstract class BaseLauncher<I, O>(
                 contract,
                 this
             )
+        isCreated = true
     }
 
     abstract fun createContract(): ActivityResultContract<I, O>
@@ -100,6 +108,18 @@ abstract class BaseLauncher<I, O>(
         return launcher
     }
 
+    private val launchHandler by lazy {
+        MessageQueue.IdleHandler {
+            if (!isCreated) {
+//                Log.d("BL", "launchHandler: waiting...")
+                return@IdleHandler true
+            }
+//            Log.d("BL", "launchHandler: launch!")
+            dispatchLauncher()
+            return@IdleHandler false
+        }
+    }
+
     open fun launch(): LauncherResult<O> {
         if (true == prevLauncher?.launcherResult?.isWaiting) {
             prevLauncher?.launch()
@@ -108,10 +128,10 @@ abstract class BaseLauncher<I, O>(
         if (!launcherResult.isWaiting) {
             launcherResult.reset()
         }
-        activityResultLauncher.runCatching {
-            launch(inputData, actOptionsCompat)
-        }.onFailure {
-            dispatchFail(it)
+        if (isCreated) {
+            dispatchLauncher()
+        } else {
+            waitingLauncher()
         }
         return launcherResult
     }
@@ -128,13 +148,31 @@ abstract class BaseLauncher<I, O>(
         }
     }
 
-    protected fun dispatchSuccess(result: O?) {
+    protected open fun waitingLauncher() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Looper.getMainLooper().queue.removeIdleHandler(launchHandler)
+            Looper.getMainLooper().queue.addIdleHandler(launchHandler)
+        } else {
+            Looper.myQueue().removeIdleHandler(launchHandler)
+            Looper.myQueue().addIdleHandler(launchHandler)
+        }
+    }
+
+    protected open fun dispatchLauncher() {
+        activityResultLauncher.runCatching {
+            launch(inputData, actOptionsCompat)
+        }.onFailure {
+            dispatchFail(it)
+        }
+    }
+
+    protected open fun dispatchSuccess(result: O?) {
         launcherResult.success(result)
         nextLauncher?.launch()
         cleanLauncher()
     }
 
-    protected fun dispatchFail(exception: Throwable) {
+    protected open fun dispatchFail(exception: Throwable) {
         var next: BaseLauncher<*, *>? = nextLauncher
         if (null == next) {
             launcherResult.fail(exception)
@@ -150,7 +188,7 @@ abstract class BaseLauncher<I, O>(
         cleanLauncher()
     }
 
-    protected fun cleanLauncher() {
+    protected open fun cleanLauncher() {
         prevLauncher = null
         nextLauncher = null
     }
