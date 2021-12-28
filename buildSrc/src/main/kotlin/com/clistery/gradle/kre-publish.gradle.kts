@@ -1,4 +1,5 @@
 import org.gradle.kotlin.dsl.extra
+import com.clistery.gradle.AppConfig
 
 plugins {
     `maven-publish`
@@ -27,8 +28,8 @@ publishing {
             val publicName = "${rootProject.name} ${name.capitalize()}"
             pom {
                 name.set(publicName)
-                description.set("Continuation version for https://github.com/vicpinm/Kotlin-Realm-Extensions")
-                url.set("https://github.com/CListery/Kotlin-Realm-Extensions")
+                description.set(AppConfig.desc)
+                url.set(AppConfig.url)
                 licenses {
                     license {
                         name.set("The Apache License, Version 2.0")
@@ -44,9 +45,29 @@ publishing {
                     }
                 }
                 scm {
-                    url.set("https://github.com/chrisbanes/ActionBar-PullToRefresh")
-                    connection.set("scm:git@github.com:CListery/Kotlin-Realm-Extensions.git")
-                    developerConnection.set("scm:git@github.com:CListery/Kotlin-Realm-Extensions.git")
+                    url.set(AppConfig.url)
+                    connection.set("scm:${AppConfig.scm}")
+                    developerConnection.set("scm:${AppConfig.scm}")
+                }
+                withXml {
+                    val allDependenciesNode = asNode().appendNode("dependencies")
+                    println("configurations: ${configurations.names}")
+                    configurations.named("api").get().allDependencies.forEach {
+                        val group = it.group
+                        val name = it.name
+                        val ver = it.version
+                        val reason = it.reason
+                        print("group:${group}, name:${name}, ver:${ver}, reason:${reason}")
+                        if(group.isNullOrEmpty() || name.isEmpty() || ver.isNullOrEmpty()){
+                            println(" --> Fail")
+                            return@forEach
+                        }
+                        println(" --> OK")
+                        val dependencyNode = allDependenciesNode.appendNode("dependency")
+                        dependencyNode.appendNode("groupId", group)
+                        dependencyNode.appendNode("artifactId", name)
+                        dependencyNode.appendNode("version", ver)
+                    }
                 }
             }
         }

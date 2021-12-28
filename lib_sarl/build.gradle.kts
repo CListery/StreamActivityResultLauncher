@@ -24,8 +24,6 @@ android {
     defaultConfig {
         minSdkVersion(AppConfig.minSdk)
         targetSdkVersion(AppConfig.targetSdk)
-        versionCode(AppConfig.versionCode)
-        versionName(AppConfig.versionName)
     }
     lintOptions {
         isAbortOnError = false
@@ -39,6 +37,7 @@ android {
 
 dependencies {
     implementation(AppDependencies.baseLibs)
+    api(AppDependencies.androidx.lifeCommon)
 }
 
 val androidJavadocs by tasks.register<Javadoc>("androidJavadocs") {

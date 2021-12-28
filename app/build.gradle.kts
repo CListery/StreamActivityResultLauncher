@@ -23,7 +23,7 @@ android {
         applicationId = "com.yh.sarl.demo"
         minSdkVersion(AppConfig.minSdk)
         targetSdkVersion(AppConfig.targetSdk)
-        versionCode(AppConfig.versionCode)
+        versionCode(1)
         versionName(AppConfig.versionName)
     }
     buildTypes {

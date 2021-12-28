@@ -36,8 +36,7 @@ object AppDependencies {
         get() = arrayListOf(
             kotlin.stdlib,
             androidx.coreKtx,
-            androidx.appcompat,
-            androidx.lifeCommon
+            androidx.appcompat
         )
     
 }
